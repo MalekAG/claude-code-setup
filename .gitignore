@@ -1,0 +1,32 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Temp files
+.tmp/
+*.log
+*.flag
+
+# Secrets
+.env
+.env.local
+credentials*.json
+*.mp3
