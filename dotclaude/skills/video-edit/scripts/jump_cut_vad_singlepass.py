@@ -207,7 +207,7 @@ def concatenate_singlepass(input_path: str, segments: list, output_path: str):
     filter_complex = build_trim_concat_filter(segments)
 
     # For very long filter expressions, use a filter script file
-    # SECURITY: delete=False creates TOCTOU window; acceptable for single-user desktop use
+
     with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
         f.write(filter_complex)
         filter_script_path = f.name
@@ -276,7 +276,7 @@ def main():
 
     # Extract audio for VAD
     print(f"🎵 Extracting audio...")
-    # SECURITY: delete=False creates TOCTOU window; acceptable for single-user desktop use
+
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
         audio_path = tmp.name
 
