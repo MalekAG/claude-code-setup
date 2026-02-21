@@ -33,7 +33,8 @@ SCOPES = [
 
 ACCOUNTS_FILE = "gmail_accounts.json"
 
-# Map account names to their credentials files
+# TODO: Configure with your actual account names and credential files
+# See SKILL.md for setup instructions
 CREDENTIALS_MAP = {
     "yourcompany": "credentials_yourcompany.json",
     "youruser": "credentials.json",

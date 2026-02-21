@@ -37,7 +37,7 @@ CT_SEARCH_URL = "https://clinicaltrials.gov/api/v2/studies"
 UNPAYWALL_URL = "https://api.unpaywall.org/v2"
 
 # Your email for Unpaywall (required)
-UNPAYWALL_EMAIL = os.getenv("UNPAYWALL_EMAIL", "research@example.com")
+UNPAYWALL_EMAIL = os.getenv("UNPAYWALL_EMAIL", "")
 
 
 class LiteratureReviewPipeline:

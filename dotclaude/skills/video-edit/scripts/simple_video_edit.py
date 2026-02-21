@@ -41,8 +41,8 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 AUPHONIC_API_KEY = os.getenv("AUPHONIC_API_KEY")
 
 # Auphonic config
-AUPHONIC_PRESET_UUID = "8YdWMdfF2QXpdZ2mDuUugj"
-YOUTUBE_SERVICE_UUID = "FxAiTuHCxgeGTZnzYeQLFd"
+AUPHONIC_PRESET_UUID = os.getenv("AUPHONIC_PRESET_UUID", "")
+YOUTUBE_SERVICE_UUID = os.getenv("AUPHONIC_YOUTUBE_SERVICE_UUID", "")
 
 # Silence detection defaults
 SILENCE_THRESHOLD_DB = -35
@@ -381,30 +381,14 @@ CHAPTERS:
 
 def build_youtube_description(summary: str, chapters: str) -> str:
     """Build full YouTube description from template with dynamic summary and chapters."""
-    return f"""Join Maker School & get automation customer #1 + all my templates ⤵️
-https://www.skool.com/makerschool/about?ref=e525fc95e7c346999dcec8e0e870e55d
+    return f"""{"{YOUR_COMMUNITY_LINK}"}
 
-Summary ⤵️
+Summary
 {summary}
 
-My software, tools, & deals (some give me kickbacks—thank you!)
-🚀 Instantly: https://link.youruser.com/instantly-short
-📧 Anymailfinder: https://link.youruser.com/amf-short
-🤖 Apify: https://console.apify.com/sign-up (30% off with code 30NICKSARAEV)
-🧑🏽‍💻 n8n: https://n8n.partnerlinks.io/h372ujv8cw80
-📈 Rize: https://link.youruser.com/rize-short (25% off with promo code NICK)
+{"{YOUR_TOOL_LINKS}"}
 
-Follow me on other platforms 😈
-📸 Instagram: https://www.instagram.com/nick_saraev
-🕊️ Twitter/X: https://twitter.com/youruser
-🤙 Blog: https://youruser.com
-
-Why watch?
-If this is your first view—hi, I'm Nick! TLDR: I spent six years building automated businesses with Make.com (most notably 1SecondCopy, a content company that hit 7 figures). Today a lot of people talk about automation, but I've noticed that very few have practical, real world success making money with it. So this channel is me chiming in and showing you what *real* systems that make *real* revenue look like.
-
-Hopefully I can help you improve your business, and in doing so, the rest of your life 🙏
-
-Like, subscribe, and leave me a comment if you have a specific request! Thanks.
+{"{YOUR_SOCIAL_LINKS}"}
 
 Chapters
 {chapters}
@@ -437,7 +421,8 @@ def upload_to_auphonic(
                 "format": "video",
                 "outgoing_services": [YOUTUBE_SERVICE_UUID]
             }]
-        }
+        },
+        timeout=30
     )
     create_resp.raise_for_status()
     production = create_resp.json()["data"]
@@ -448,7 +433,8 @@ def upload_to_auphonic(
         upload_resp = requests.post(
             f"https://auphonic.com/api/production/{production_uuid}/upload.json",
             headers=headers,
-            files={"input_file": f}
+            files={"input_file": f},
+            timeout=300
         )
     upload_resp.raise_for_status()
 
@@ -458,13 +444,15 @@ def upload_to_auphonic(
             requests.post(
                 f"https://auphonic.com/api/production/{production_uuid}/upload.json",
                 headers=headers,
-                files={"image": f}
+                files={"image": f},
+                timeout=300
             )
 
     print("Starting Auphonic processing...")
     start_resp = requests.post(
         f"https://auphonic.com/api/production/{production_uuid}/start.json",
-        headers=headers
+        headers=headers,
+        timeout=30
     )
     start_resp.raise_for_status()
 

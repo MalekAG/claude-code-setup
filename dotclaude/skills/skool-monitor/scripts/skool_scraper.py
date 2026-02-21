@@ -81,7 +81,7 @@ class SkoolScraper:
                             unique_posts.append(p)
                     posts = unique_posts
                     print(f"Loaded {len(posts)} unique posts from {output_file}", file=sys.stderr)
-                except:
+                except (json.JSONDecodeError, KeyError, ValueError):
                     posts = []
 
         while len(posts) < max_posts:
@@ -289,7 +289,7 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc(limit=5)
         sys.exit(1)
 
 if __name__ == "__main__":

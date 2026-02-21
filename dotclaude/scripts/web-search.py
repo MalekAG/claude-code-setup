@@ -13,7 +13,7 @@ import json
 import sys
 import warnings
 
-warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="ddgs")
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from ddgs import DDGS

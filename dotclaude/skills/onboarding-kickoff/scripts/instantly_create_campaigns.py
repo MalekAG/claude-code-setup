@@ -235,8 +235,9 @@ def create_campaign_in_instantly(campaign_data: dict) -> dict:
             response = requests.post(url, headers=headers, json=payload, timeout=60)
 
         if response.status_code not in [200, 201]:
-            logger.error(f"Instantly API error: {response.status_code} - {response.text}")
-            return {"error": f"API error {response.status_code}", "details": response.text}
+            logger.debug(f"Instantly API error body: {response.text}")
+            logger.error(f"Instantly API returned {response.status_code}")
+            return {"error": f"API error {response.status_code}"}
 
         result = response.json()
         logger.info(f"Created campaign: {campaign_data['campaign_name']} (ID: {result.get('id', 'unknown')})")
@@ -303,8 +304,8 @@ def main():
     args = parser.parse_args()
 
     # Check for API key early (unless dry run)
-    api_key = os.getenv("INSTANTLY_API_KEY", "")
-    if not args.dry_run and (not api_key or api_key.startswith("your_")):
+    api_key = os.getenv("INSTANTLY_API_KEY", "").strip()
+    if not args.dry_run and (not api_key or api_key.startswith("your_") or len(api_key) < 10):
         print(json.dumps({
             "status": "error",
             "error": "INSTANTLY_API_KEY not configured in .env",

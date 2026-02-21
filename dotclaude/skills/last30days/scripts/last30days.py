@@ -305,7 +305,7 @@ def main():
     parser.add_argument(
         "--debug",
         action="store_true",
-        help="Enable verbose debug logging",
+        help="Enable verbose debug logging (may expose API response data in logs)",
     )
     parser.add_argument(
         "--include-web",

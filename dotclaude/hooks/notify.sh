@@ -5,7 +5,7 @@ cat > /dev/null
 if [ -n "$SSH_CLIENT" ]; then
     printf '\a'
 else
-    powershell -ExecutionPolicy Bypass -File "$HOME/.claude/hooks/play-notification.ps1"
+    bash "$HOME/.claude/hooks/play-notification.sh"
 fi
 
 exit 0

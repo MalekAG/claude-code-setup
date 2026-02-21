@@ -20,7 +20,7 @@
       "Task",
       "TodoWrite"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "default"
   },
   "hooks": {
     "PostToolUse": [

@@ -205,7 +205,7 @@ if __name__ == "__main__":
     # Test payload
     test_payload = {
         "client_name": "John Smith",
-        "client_email": "nickolassaraev@gmail.com",
+        "client_email": "test@example.com",
         "company_name": "Acme Corp"
     }
 

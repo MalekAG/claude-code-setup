@@ -277,7 +277,7 @@ def search_tubelab_outliers(query, size=40, min_views=10000, video_type="video",
                     pub_date = datetime.datetime.fromisoformat(published_at.replace("Z", "+00:00"))
                     date_str = pub_date.strftime("%Y%m%d")
                     days_old = (datetime.datetime.now(datetime.timezone.utc) - pub_date).days
-                except:
+                except (json.JSONDecodeError, KeyError, ValueError, TypeError):
                     date_str = ""
                     days_old = 999
             else:
@@ -403,7 +403,7 @@ def fetch_transcript(video_id):
         items = list(client.dataset(run["defaultDatasetId"]).iterate_items())
         if items and "captions" in items[0]:
             return " ".join(items[0]["captions"])
-    except:
+    except (json.JSONDecodeError, KeyError, ValueError, TypeError):
         pass
 
     return None

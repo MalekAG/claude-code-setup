@@ -31,9 +31,10 @@ class SkoolBrowserClient:
     Maintains a persistent browser session and extracts fresh tokens on demand.
     """
 
-    def __init__(self, auth_token=None, client_id=None, headless=True):
+    def __init__(self, auth_token=None, client_id=None, headless=True, community_slug=None):
         self.base_url = "https://www.skool.com"
         self.api_base_url = "https://api2.skool.com"
+        self.community_slug = community_slug or "makerschool"
 
         self.auth_token = auth_token or os.getenv("SKOOL_AUTH_TOKEN")
         self.client_id = client_id or os.getenv("SKOOL_CLIENT_ID")
@@ -81,7 +82,7 @@ class SkoolBrowserClient:
 
         # Navigate to Skool to establish session
         print("Loading Skool...")
-        self.page.goto(f"{self.base_url}/makerschool", wait_until="domcontentloaded")
+        self.page.goto(f"{self.base_url}/{self.community_slug}", wait_until="domcontentloaded")
         time.sleep(2)  # Wait for any background JS to execute
 
         print("✓ Browser session established")
@@ -272,7 +273,7 @@ def main():
     try:
         headless = args.headless and not args.visible
 
-        with SkoolBrowserClient(headless=headless) as client:
+        with SkoolBrowserClient(headless=headless, community_slug=args.community) as client:
             if args.command == 'group-id':
                 print(f"Getting group_id for {args.community}...")
                 group_id = client.get_group_id(args.community)
@@ -333,7 +334,7 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc(limit=5)
         sys.exit(1)
 
 

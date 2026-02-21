@@ -17,6 +17,10 @@ load_dotenv()
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
+def _safe(s):
+    """Escape curly braces in external data before .format() interpolation."""
+    return str(s).replace('{', '{{').replace('}', '}}')
+
 def create_classification_request(company, custom_id, classification_prompt):
     """Create a single classification request for the batch API."""
     name = company.get('company_name', 'Unknown')
@@ -26,10 +30,10 @@ def create_classification_request(company, custom_id, classification_prompt):
 
     # Build the full prompt with company data
     full_prompt = classification_prompt.format(
-        name=name,
-        industry=industry,
-        keywords=keywords,
-        desc=desc
+        name=_safe(name),
+        industry=_safe(industry),
+        keywords=_safe(keywords),
+        desc=_safe(desc),
     )
 
     return {

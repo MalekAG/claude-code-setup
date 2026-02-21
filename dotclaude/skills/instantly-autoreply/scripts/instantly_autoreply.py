@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("instantly-autoreply")
 
 # Constants
-KB_SPREADSHEET_ID = "YOUR_SHEET_ID_HERE"
+KB_SPREADSHEET_ID = os.getenv("KB_SPREADSHEET_ID", "")
 
 
 def get_google_creds(token_data: dict) -> Credentials:
@@ -240,9 +240,6 @@ def run(payload: dict, token_data: dict, slack_notify=None) -> dict:
         if slack_notify:
             slack_notify(msg)
         logger.info(msg)
-
-    # Debug: verify setup
-    notify(f"📦 API key present: {bool(os.getenv('ANTHROPIC_API_KEY'))}")
 
     # Step 1: Extract campaign ID
     campaign_id = payload.get("campaign_id")

@@ -17,11 +17,8 @@ import requests
 def load_env():
     env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
     if os.path.exists(env_path):
-        with open(env_path) as f:
-            for line in f:
-                if '=' in line and not line.startswith('#'):
-                    k, v = line.strip().split('=', 1)
-                    os.environ[k] = v
+        from dotenv import load_dotenv
+        load_dotenv(env_path)
 
 
 class SkoolCommentScraper:
@@ -29,10 +26,10 @@ class SkoolCommentScraper:
     Scrapes comments from Skool posts using Playwright for WAF token generation.
     """
 
-    def __init__(self, auth_token=None, client_id=None, headless=True):
+    def __init__(self, auth_token=None, client_id=None, headless=True, group_id=None):
         self.base_url = "https://www.skool.com"
         self.api_url = "https://api2.skool.com"
-        self.group_id = "e256cd9ef1ac4dbe9197634db46e9e3b"  # makerschool
+        self.group_id = group_id or os.getenv("SKOOL_GROUP_ID", "e256cd9ef1ac4dbe9197634db46e9e3b")
 
         self.auth_token = auth_token or os.getenv("SKOOL_AUTH_TOKEN")
         self.client_id = client_id or os.getenv("SKOOL_CLIENT_ID")

@@ -324,7 +324,7 @@ def main():
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         import traceback
-        traceback.print_exc()
+        traceback.print_exc(limit=5)
         sys.exit(1)
 
 

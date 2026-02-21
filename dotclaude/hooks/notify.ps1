@@ -1,8 +1,10 @@
 # Unified notification - detects SSH vs local
+# $input is consumed to drain stdin; do NOT interpolate into commands
 $input = $Input | Out-String
 
 if ($env:SSH_CLIENT) {
     # SSH session: send UDP ping to the laptop, which runs a listener that beeps
+    # NOTE: $ip comes from SSH_CLIENT; validate if used in adversarial environments
     $ip = ($env:SSH_CLIENT -split ' ')[0]
     $client = [System.Net.Sockets.UdpClient]::new()
     $bytes = [byte[]]@(1)

@@ -84,6 +84,7 @@ def request(
                 pass
             log(f"HTTP Error {e.code}: {e.reason}")
             if body:
+                # WARNING: May expose API response data; do not use --debug in shared environments
                 log(f"Error body: {body[:500]}")
             last_error = HTTPError(f"HTTP {e.code}: {e.reason}", e.code, body)
 

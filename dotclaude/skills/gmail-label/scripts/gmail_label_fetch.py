@@ -36,7 +36,7 @@ def load_accounts() -> dict:
 def get_service(account: str):
     accounts = load_accounts()
     if account not in accounts:
-        print(f"Error: Account '{account}' not found. Available: {list(accounts.keys())}", file=sys.stderr)
+        print(f"Error: Account '{account}' not found. Check gmail_accounts.json for available accounts.", file=sys.stderr)
         sys.exit(1)
 
     token_file = accounts[account].get("token_file")

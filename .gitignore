@@ -29,4 +29,8 @@ node_modules/
 .env
 .env.local
 credentials*.json
+token.json
+token_*.json
+service_account.json
+gmail_accounts.json
 *.mp3

@@ -27,6 +27,15 @@ load_dotenv()
 UNSPLASH_KEY = os.getenv("UNSPLASH_ACCESS_KEY", "")
 
 
+def _safe_img_url(url):
+    """Validate and escape image URL for HTML embedding."""
+    from urllib.parse import urlparse
+    parsed = urlparse(url)
+    if parsed.scheme not in ('https', 'http'):
+        return ''
+    return escape(url)
+
+
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '_', text.lower()).strip('_')
 
@@ -224,7 +233,7 @@ def generate_html(prospect):
             services_cards += f'''
                 <div class="case-card">
                     <div class="case-image">
-                        <img src="{images[img_idx]['url']}" alt="{escape(svc)}">
+                        <img src="{_safe_img_url(images[img_idx]['url'])}" alt="{escape(svc)}">
                     </div>
                     <div class="case-meta">
                         <span class="case-label">{escape(svc)}</span>
@@ -770,13 +779,13 @@ def generate_html(prospect):
         <div class="hero-left">
             <div class="collage">
                 <div class="collage-img main">
-                    <img src="{images[0]['url']}" alt="{escape(images[0]['alt'])}">
+                    <img src="{_safe_img_url(images[0]['url'])}" alt="{escape(images[0]['alt'])}">
                 </div>
                 <div class="collage-img">
-                    <img src="{images[1]['url']}" alt="{escape(images[1]['alt'])}">
+                    <img src="{_safe_img_url(images[1]['url'])}" alt="{escape(images[1]['alt'])}">
                 </div>
                 <div class="collage-img">
-                    <img src="{images[2]['url']}" alt="{escape(images[2]['alt'])}">
+                    <img src="{_safe_img_url(images[2]['url'])}" alt="{escape(images[2]['alt'])}">
                 </div>
             </div>
         </div>
@@ -796,8 +805,8 @@ def generate_html(prospect):
     <section class="about" id="about">
         <div class="about-layout">
             <div class="about-left">
-                <img src="{images[3]['url']}" alt="{escape(images[3]['alt'])}" class="img-main">
-                <img src="{images[4]['url']}" alt="{escape(images[4]['alt'])}" class="img-inset">
+                <img src="{_safe_img_url(images[3]['url'])}" alt="{escape(images[3]['alt'])}" class="img-main">
+                <img src="{_safe_img_url(images[4]['url'])}" alt="{escape(images[4]['alt'])}" class="img-inset">
             </div>
             <div class="about-right">
                 <span class="label">About</span>
@@ -821,7 +830,7 @@ def generate_html(prospect):
 
     <!-- WIDE IMAGE BREAK -->
     <div class="wide-image">
-        <img src="{images[5]['url']}" alt="{escape(images[5]['alt'])}">
+        <img src="{_safe_img_url(images[5]['url'])}" alt="{escape(images[5]['alt'])}">
     </div>
 
     <!-- CONTACT -->

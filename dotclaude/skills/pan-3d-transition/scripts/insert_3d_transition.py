@@ -158,6 +158,9 @@ def create_transition(
         shutil.copy(bg_image, bg_dest)
     else:
         # Create solid color background
+        import re as _re
+        if not _re.fullmatch(r'#[0-9a-fA-F]{3,8}', bg_color):
+            raise ValueError(f"Invalid bg_color format: {bg_color!r}. Must be hex color like #2d3436")
         cmd = [
             "ffmpeg", "-y",
             "-f", "lavfi", "-i", f"color=c={bg_color.replace('#', '0x')}:s={width}x{height}:d=1",

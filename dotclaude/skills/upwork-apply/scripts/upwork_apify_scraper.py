@@ -35,7 +35,8 @@ def scrape_upwork_jobs(
         raise ValueError("APIFY_API_TOKEN not found in environment")
 
     actor_id = "upwork-vibe~upwork-job-scraper"
-    run_url = f"https://api.apify.com/v2/acts/{actor_id}/runs?token={api_token}"
+    run_url = f"https://api.apify.com/v2/acts/{actor_id}/runs"
+    headers = {"Authorization": f"Bearer {api_token}"}
 
     # Free tier only supports: limit, fromDate, toDate
     input_data = {"limit": limit}
@@ -51,9 +52,9 @@ def scrape_upwork_jobs(
         print(f"  To: {to_date}")
 
     # Start the actor run
-    response = requests.post(run_url, json=input_data)
+    response = requests.post(run_url, json=input_data, headers=headers, timeout=30)
     if not response.ok:
-        raise Exception(f"Failed to start actor: {response.text}")
+        raise Exception(f"Failed to start actor: HTTP {response.status_code}")
 
     run_info = response.json()
     run_id = run_info.get('data', {}).get('id')
@@ -62,11 +63,11 @@ def scrape_upwork_jobs(
     print(f"Run started: {run_id}")
 
     # Wait for completion
-    status_url = f"https://api.apify.com/v2/actor-runs/{run_id}?token={api_token}"
+    status_url = f"https://api.apify.com/v2/actor-runs/{run_id}"
 
     for i in range(60):  # Max 5 minutes wait
         time.sleep(3)
-        status_resp = requests.get(status_url)
+        status_resp = requests.get(status_url, headers=headers, timeout=30)
         if status_resp.ok:
             status = status_resp.json().get('data', {}).get('status')
             if status == 'SUCCEEDED':
@@ -79,11 +80,11 @@ def scrape_upwork_jobs(
             print(f"  Error checking status: {status_resp.status_code}")
 
     # Get results
-    dataset_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items?token={api_token}"
-    results_resp = requests.get(dataset_url)
+    dataset_url = f"https://api.apify.com/v2/datasets/{dataset_id}/items"
+    results_resp = requests.get(dataset_url, headers=headers, timeout=30)
 
     if not results_resp.ok:
-        raise Exception(f"Failed to fetch results: {results_resp.text}")
+        raise Exception(f"Failed to fetch results: HTTP {results_resp.status_code}")
 
     jobs = results_resp.json()
     print(f"Fetched {len(jobs)} jobs from Apify")

@@ -20,6 +20,7 @@ import logging
 import subprocess
 import time
 import glob
+import re
 from datetime import datetime
 from pathlib import Path
 from google.oauth2.credentials import Credentials
@@ -29,8 +30,16 @@ from google.auth.transport.requests import Request
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("onboarding-post-kickoff")
 
+
+def _validate_webhook_field(value, field_name):
+    """Validate webhook payload fields to prevent CLI flag injection."""
+    if not isinstance(value, str) or not re.match(r'^[\w\s,.\-/&()]{1,200}$', value):
+        raise ValueError(f"Invalid {field_name}: contains disallowed characters")
+    return value
+
+
 # Constants
-KB_SPREADSHEET_ID = "YOUR_SHEET_ID_HERE"
+KB_SPREADSHEET_ID = os.getenv("KB_SPREADSHEET_ID", "")
 WORKSPACE_DIR = Path(__file__).parent.parent
 
 
@@ -241,6 +250,14 @@ def run(payload: dict, token_data: dict, slack_notify=None) -> dict:
         company_keywords = [service_type]
 
     # Step 1a: Scrape with Apify (saves to .tmp/leads_*.json)
+    # Validate fields used in subprocess args to prevent CLI flag injection
+    try:
+        _validate_webhook_field(service_type, "service_type")
+        _validate_webhook_field(target_location, "target_location")
+    except ValueError as e:
+        notify(f"Invalid webhook payload: {e}")
+        return {"status": "error", "error": str(e)}
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_prefix = f"{client_name.lower().replace(' ', '_')}_leads"
 
@@ -456,7 +473,7 @@ if __name__ == "__main__":
     # Test payload
     test_payload = {
         "client_name": "TestPlumbing",
-        "client_email": "nickolassaraev@gmail.com",
+        "client_email": "test@example.com",
         "service_type": "plumbers",
         "target_location": "Austin TX",
         "lead_limit": 5,

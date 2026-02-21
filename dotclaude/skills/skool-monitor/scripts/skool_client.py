@@ -198,6 +198,7 @@ class SkoolClient:
 
         return response.json()
 
+    # TODO: Fetch build_id dynamically from __NEXT_DATA__ instead of hardcoding
     def search_posts(self, community_slug, query, build_id="1763672899107"):
         """
         Search for posts in a community.
@@ -317,7 +318,7 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc(limit=5)
         sys.exit(1)
 
 if __name__ == "__main__":

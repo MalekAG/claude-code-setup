@@ -521,6 +521,11 @@ def main():
     elif args.source:
         print(f"Loading source: {args.source}")
         if args.source.startswith(("http://", "https://")):
+            from urllib.parse import urlparse
+            parsed = urlparse(args.source)
+            if parsed.hostname in ('localhost', '127.0.0.1', '0.0.0.0') or (parsed.hostname and parsed.hostname.startswith(('10.', '192.168.', '169.254.'))):
+                print("Error: Cannot fetch from private/loopback addresses", file=sys.stderr)
+                sys.exit(1)
             source_image = download_image(args.source)
         else:
             source_image = Image.open(args.source)

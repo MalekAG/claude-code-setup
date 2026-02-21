@@ -39,19 +39,19 @@ mkdir -p "$TARGET"/{rules,agents,hooks,scripts,skills}
 
 # Copy files
 echo "Copying agents..."
-cp -r "$DOTCLAUDE"/agents/* "$TARGET/agents/"
+cp -r "$DOTCLAUDE"/agents/. "$TARGET/agents/"
 
 echo "Copying rules..."
-cp -r "$DOTCLAUDE"/rules/* "$TARGET/rules/"
+cp -r "$DOTCLAUDE"/rules/. "$TARGET/rules/"
 
 echo "Copying hooks..."
-cp -r "$DOTCLAUDE"/hooks/* "$TARGET/hooks/"
+cp -r "$DOTCLAUDE"/hooks/. "$TARGET/hooks/"
 
 echo "Copying scripts..."
-cp -r "$DOTCLAUDE"/scripts/* "$TARGET/scripts/"
+cp -r "$DOTCLAUDE"/scripts/. "$TARGET/scripts/"
 
 echo "Copying skills (32 folders)..."
-cp -r "$DOTCLAUDE"/skills/* "$TARGET/skills/"
+cp -r "$DOTCLAUDE"/skills/. "$TARGET/skills/"
 
 echo "Copying CLAUDE.md..."
 cp "$DOTCLAUDE/CLAUDE.md" "$TARGET/CLAUDE.md"
@@ -61,7 +61,6 @@ cp "$DOTCLAUDE/statusline-command.sh" "$TARGET/statusline-command.sh"
 
 # Make shell scripts executable
 chmod +x "$TARGET/hooks/"*.sh 2>/dev/null || true
-chmod +x "$TARGET/scripts/"*.py 2>/dev/null || true
 chmod +x "$TARGET/statusline-command.sh" 2>/dev/null || true
 
 # Generate settings.json from template
@@ -77,9 +76,7 @@ if [ -f "$SETTINGS" ]; then
     SETTINGS="$TARGET/settings.json.new"
 fi
 
-# Detect username and paths based on OS
-USERNAME=$(whoami)
-
+# Detect paths based on OS
 case "$OS" in
     windows)
         # Detect Git Bash path
@@ -98,7 +95,7 @@ case "$OS" in
             GIT_BASH=$(echo "$GIT_BASH" | sed 's|/c/|C:\\\\|' | sed 's|/|\\\\|g')
         fi
 
-        CLAUDE_HOME_UNIX="/c/Users/$USERNAME/.claude"
+        CLAUDE_HOME_UNIX=$(echo "$HOME/.claude" | sed 's|^/home/|/c/Users/|')
         WIN_PATH=$(echo "$HOME/.claude" | sed 's|/c/|C:\\\\|' | sed 's|/|\\\\|g')
         NOTIFY_CMD="powershell -ExecutionPolicy Bypass -File \\\"${WIN_PATH}\\\\hooks\\\\notify.ps1\\\""
 

@@ -18,7 +18,26 @@ import sys
 import json
 import re
 import argparse
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, quote_plus
+
+def _is_safe_url(url):
+    """Reject private/loopback addresses to prevent SSRF."""
+    try:
+        parsed = urlparse(url)
+        if parsed.scheme not in ('http', 'https'):
+            return False
+        host = parsed.hostname or ''
+        if host in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):
+            return False
+        if host.startswith(('10.', '192.168.', '169.254.')):
+            return False
+        if host.startswith('172.'):
+            parts = host.split('.')
+            if len(parts) >= 2 and 16 <= int(parts[1]) <= 31:
+                return False
+        return True
+    except Exception:
+        return False
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
@@ -161,7 +180,7 @@ def search_for_contacts(business_name: str, location: str = None) -> str:
         query_parts.append(location)
     query = " ".join(query_parts)
 
-    search_url = f"https://html.duckduckgo.com/html/?q={query}"
+    search_url = f"https://html.duckduckgo.com/html/?q={quote_plus(query)}"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -207,6 +226,8 @@ def search_for_contacts(business_name: str, location: str = None) -> str:
                     if actual_url:
                         from urllib.parse import unquote
                         url = unquote(actual_url.group(1))
+                        if not _is_safe_url(url):
+                            continue
 
                 page_html, _ = fetch_page(url)
                 if page_html:
@@ -331,6 +352,9 @@ def scrape_website_contacts(url: str, business_name: str = None, fast_mode: bool
     # Normalize URL
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
+
+    if not _is_safe_url(url):
+        return {}
 
     # Fetch main page
     main_html, final_url = fetch_page(url, timeout=10.0)
