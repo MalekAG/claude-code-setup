@@ -7,10 +7,6 @@ from typing import Optional, Dict, Any
 CONFIG_DIR = Path.home() / ".config" / "last30days"
 CONFIG_FILE = CONFIG_DIR / ".env"
 
-if not CONFIG_DIR.exists():
-    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    CONFIG_DIR.chmod(0o700)  # Restrict access to owner only
-
 
 def load_env_file(path: Path) -> Dict[str, str]:
     """Load environment variables from a file."""

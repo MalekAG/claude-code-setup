@@ -21,6 +21,8 @@ def log(msg: str):
 MAX_RETRIES = 3
 RETRY_DELAY = 1.0
 USER_AGENT = "last30days-skill/1.0 (Claude Code Skill)"
+# Reddit blocks generic User-Agents on their JSON endpoints; use a browser-like one
+REDDIT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 
 
 class HTTPError(Exception):
@@ -84,7 +86,6 @@ def request(
                 pass
             log(f"HTTP Error {e.code}: {e.reason}")
             if body:
-                # WARNING: May expose API response data; do not use --debug in shared environments
                 log(f"Error body: {body[:500]}")
             last_error = HTTPError(f"HTTP {e.code}: {e.reason}", e.code, body)
 
@@ -146,8 +147,9 @@ def get_reddit_json(path: str) -> Dict[str, Any]:
     url = f"https://www.reddit.com{path}?raw_json=1"
 
     headers = {
-        "User-Agent": USER_AGENT,
-        "Accept": "application/json",
+        "User-Agent": REDDIT_USER_AGENT,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
     }
 
     return get(url, headers=headers)
