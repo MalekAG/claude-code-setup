@@ -137,9 +137,9 @@ Place any `.mp3` file at `~/.claude/notification.mp3`. Falls back to Windows chi
 ### Adjust Permissions
 
 Edit `~/.claude/settings.json`:
-- `"defaultMode": "bypassPermissions"` — no permission prompts (power user)
-- `"defaultMode": "default"` — asks before each tool use (safer)
-- `"allow": [...]` — pre-approve specific tools only
+- `"defaultMode": "default"` — asks before each tool use (recommended)
+- `"defaultMode": "bypassPermissions"` — no permission prompts (power user — only if you trust all installed skills/agents)
+- `"allow": [...]` — pre-approve specific tools even in default mode
 
 ### Enable/Disable Plugins
 

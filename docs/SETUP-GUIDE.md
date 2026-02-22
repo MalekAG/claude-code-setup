@@ -95,10 +95,10 @@ Also remove `CLAUDE_CODE_GIT_BASH_PATH` and `CLAUDE_CODE_SHELL` from env.
 
 ### Permission Mode
 
-The default is `"defaultMode": "bypassPermissions"` which skips all tool approval prompts. If you prefer safer operation:
+The default is `"defaultMode": "default"` which asks before executing tools. If you want to skip all permission prompts (only recommended if you trust all installed skills and agents):
 
 ```json
-"defaultMode": "default"
+"defaultMode": "bypassPermissions"
 ```
 
 ### Model Overrides

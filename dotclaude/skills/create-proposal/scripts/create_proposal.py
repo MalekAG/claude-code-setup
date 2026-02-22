@@ -15,7 +15,7 @@ except ImportError:
 
 API_KEY = os.getenv("PANDADOC_API_KEY")
 API_URL = "https://api.pandadoc.com/public/v1/documents"
-TEMPLATE_UUID = "G8GhAvKGa9D8dmpwTnEWyV"
+TEMPLATE_UUID = os.getenv("PANDADOC_TEMPLATE_UUID", "")
 
 @dataclass
 class ProposalConfig:
@@ -112,6 +112,8 @@ def validate_input(data: Dict[str, Any]) -> ProposalConfig:
 def create_document(config: ProposalConfig) -> Dict[str, Any]:
     if not API_KEY:
         raise ValueError("PANDADOC_API_KEY not found in environment variables")
+    if not TEMPLATE_UUID:
+        raise ValueError("PANDADOC_TEMPLATE_UUID not found in environment variables")
 
     headers = {
         "Authorization": f"API-Key {API_KEY}",

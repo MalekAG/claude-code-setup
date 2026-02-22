@@ -115,4 +115,5 @@ Use Gmail to send HTML follow-up email:
 Requires in `.env`:
 ```
 PANDADOC_API_KEY=your_key
+PANDADOC_TEMPLATE_UUID=your_template_uuid
 ```

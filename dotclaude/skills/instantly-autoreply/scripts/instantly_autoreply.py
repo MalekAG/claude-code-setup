@@ -186,8 +186,7 @@ Otherwise, write the reply now:"""
         logger.error(f"Claude API error: {e}")
         import traceback
         logger.error(traceback.format_exc())
-        # Return error message instead of None so we can debug
-        return f"ERROR: {str(e)}"
+        return None
 
 
 def send_reply(payload: dict, html_body: str) -> dict:

@@ -89,9 +89,9 @@ Test it: `python ~/.claude/scripts/web-search.py "test query"`
 
 ### 6. Settings Explained
 
-**permissions.defaultMode: "bypassPermissions"** — Skips all tool permission prompts. This is a power-user setting. Remove this line or change to `"default"` if you prefer to approve each tool use.
+**permissions.defaultMode: "default"** — Asks before executing tools. Change to `"bypassPermissions"` to skip all permission prompts (power-user setting — only do this if you trust all installed skills and agents, as any skill can execute arbitrary shell commands without confirmation).
 
-**permissions.allow** — List of tools that are pre-approved. Only relevant if `defaultMode` is not `bypassPermissions`.
+**permissions.allow** — List of tools that are pre-approved even in `"default"` mode. `Bash` is intentionally excluded from the default allow list — add it only if you want unattended shell execution.
 
 **env.ANTHROPIC_DEFAULT_HAIKU_MODEL / ANTHROPIC_DEFAULT_SONNET_MODEL** — Override which models are used when agents request "haiku" or "sonnet". Set to `claude-sonnet-4-6` to use Sonnet 4.6 for both (cost-effective for subagents).
 

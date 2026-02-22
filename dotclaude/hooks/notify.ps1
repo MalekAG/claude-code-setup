@@ -3,11 +3,17 @@ $input = $Input | Out-String
 
 if ($env:SSH_CLIENT) {
     # SSH session: send UDP ping to the laptop, which runs a listener that beeps
+    # Requires a UDP listener on the client machine (port configurable via NOTIFY_UDP_PORT env var)
     $ip = ($env:SSH_CLIENT -split ' ')[0]
-    $client = [System.Net.Sockets.UdpClient]::new()
-    $bytes = [byte[]]@(1)
-    $client.Send($bytes, 1, $ip, 9999) | Out-Null
-    $client.Close()
+    # Validate IP format before sending
+    $parsedIp = $null
+    if ([System.Net.IPAddress]::TryParse($ip, [ref]$parsedIp)) {
+        $port = if ($env:NOTIFY_UDP_PORT) { [int]$env:NOTIFY_UDP_PORT } else { 9999 }
+        $client = [System.Net.Sockets.UdpClient]::new()
+        $bytes = [byte[]]@(1)
+        $client.Send($bytes, 1, $ip, $port) | Out-Null
+        $client.Close()
+    }
 } else {
     # Local session: play sound file
     # Uses custom MP3 if present, falls back to built-in Windows sound

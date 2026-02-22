@@ -203,7 +203,7 @@ mkdir -p {PROJECT_PATH}/.tmp/security-review
 Launch all applicable subagents in parallel using the Task tool:
 - `model: "sonnet"` for all subagents
 - `subagent_type: "general-purpose"`
-- `mode: "bypassPermissions"` (read-only scanning, safe to auto-approve)
+- `mode: "default"`
 
 ### Step 3: Collect results
 
