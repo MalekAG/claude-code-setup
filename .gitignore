@@ -25,6 +25,9 @@ node_modules/
 *.log
 *.flag
 
+# Personal
+formalek.md
+
 # Secrets
 .env
 .env.local
